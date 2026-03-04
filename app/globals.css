@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+:root {
+  --background: hsl(0 0% 9%);
+  --foreground: #ffffff;
+  --base: hsl(0 0% 9%);
+  --base-warm: hsl(0 5% 8%);
+  --primary: hsl(0 72% 52%);
+  --primary-muted: hsl(0 50% 40%);
+  --approve: hsl(142.1 76.2% 36.3%);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-base: var(--base);
+  --color-base-warm: var(--base-warm);
+  --color-primary: var(--primary);
+  --color-primary-muted: var(--primary-muted);
+  --color-approve: var(--approve);
+  --font-sans: "Urbanist", system-ui, sans-serif;
+  --font-display: "Urbanist", system-ui, sans-serif;
+}
+
+body {
+  background: radial-gradient(
+      circle at 50% 110%,
+      hsl(0 72% 52% / 0.18),
+      transparent 42%
+    ),
+    linear-gradient(180deg, hsl(0 0% 9%) 0%, hsl(0 5% 8%) 100%);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
