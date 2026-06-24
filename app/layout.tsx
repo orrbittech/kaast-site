@@ -1,11 +1,11 @@
+/** KAAST — Proprietary software of Orrbit Systems (https://www.orrbit.co.za/) */
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Urbanist, Caveat, Geist } from "next/font/google";
+import { Urbanist, Caveat } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const urbanist = Urbanist({
   weight: ["400", "500", "600"],
@@ -141,7 +141,8 @@ export default function RootLayout({
   return (
     <html
       lang="en-ZA"
-      className={cn(urbanist.variable, caveat.variable, "font-sans", geist.variable)}
+      className={cn(urbanist.variable, caveat.variable, "font-sans")}
+      suppressHydrationWarning
     >
       <head>
         <script
@@ -150,7 +151,14 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <ClerkProvider appearance={clerkAppearance}>{children}</ClerkProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider appearance={clerkAppearance}>{children}</ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

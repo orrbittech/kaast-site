@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AuthShell } from "@/components/AuthShell";
 import { StoreDownloadButtons } from "@/components/StoreDownloadButtons";
-import { ROUTES } from "@/lib/routes";
+import { ROUTES, TRIAL_DAYS } from "@/lib/routes";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default function WelcomePage() {
     >
       <div className="w-full max-w-lg space-y-8 text-center">
         <p className="rounded-xl border border-approve/30 bg-approve/10 px-4 py-3 text-sm text-zinc-200">
-          Your 30-day organization trial has started. Open the app on your phone to
+          Your {TRIAL_DAYS}-day organization trial has started. Open the app on your phone to
           manage screens across your locations.
         </p>
 

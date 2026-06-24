@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# KAAST Web
 
-## Getting Started
+Marketing site, organization signup, and Clerk Billing checkout for **KAAST** — digital media management for South African SMEs.
 
-First, run the development server:
+Built by **Brandon Nkawu** for [Orrbit Systems](https://www.orrbit.co.za/). Proprietary product — see [LICENSE](./LICENSE).
+
+## Stack
+
+- Next.js 16 (App Router)
+- Clerk (auth, organizations, billing)
+- Tailwind CSS + shadcn/ui
+
+## Setup
 
 ```bash
-npm run dev
-# or
+yarn install
+cp .env.example .env.local
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Key routes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Route | Purpose |
+|-------|---------|
+| `/` | Marketing home |
+| `/sign-up` | Trial signup + org plan selection |
+| `/billing` | Manage subscription |
+| `/privacy` | Privacy policy (store URL) |
+| `/terms` | Terms of use (store URL) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Legal
 
-## Learn More
+- Privacy: https://kaast.app/privacy
+- Terms: https://kaast.app/terms
 
-To learn more about Next.js, take a look at the following resources:
+## Clerk Billing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [../server/config/CLERK_BILLING_SETUP.md](../server/config/CLERK_BILLING_SETUP.md) for plan and webhook configuration.

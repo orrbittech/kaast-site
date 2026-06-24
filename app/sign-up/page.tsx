@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
   PricingTable,
   SignUp,
@@ -8,10 +11,37 @@ import {
   useOrganizationList,
 } from "@clerk/nextjs";
 import { AuthShell } from "@/components/AuthShell";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { clerkAppearance } from "@/lib/clerk-appearance";
-import { ROUTES } from "@/lib/routes";
+import { authButtonClass, authFieldClass } from "@/lib/auth-form-styles";
+import { ROUTES, TRIAL_DAYS } from "@/lib/routes";
+import { cn } from "@/lib/utils";
 
 const highlightedPlan = process.env.NEXT_PUBLIC_CLERK_HIGHLIGHTED_PLAN;
+
+const orgNameSchema = z.object({
+  orgName: z
+    .string()
+    .trim()
+    .min(1, "Organization name is required")
+    .max(100, "Organization name must be 100 characters or less"),
+});
+
+type OrgNameFormValues = z.infer<typeof orgNameSchema>;
 
 function OrgSetupStep() {
   const { orgId } = useAuth();
@@ -19,9 +49,13 @@ function OrgSetupStep() {
     useOrganizationList({
       userMemberships: { infinite: true },
     });
-  const [orgName, setOrgName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const form = useForm<OrgNameFormValues>({
+    resolver: zodResolver(orgNameSchema),
+    defaultValues: { orgName: "" },
+  });
 
   if (orgId) {
     return (
@@ -36,7 +70,7 @@ function OrgSetupStep() {
 
   if (!isLoaded) {
     return (
-      <p className="text-center text-zinc-400">Loading your account...</p>
+      <p className="text-center text-muted-foreground">Loading your account...</p>
     );
   }
 
@@ -55,15 +89,13 @@ function OrgSetupStep() {
     }
   }
 
-  async function handleCreateOrg(event: React.FormEvent) {
-    event.preventDefault();
-    const trimmed = orgName.trim();
-    if (!trimmed || !createOrganization || !setActive) return;
+  async function handleCreateOrg(values: OrgNameFormValues) {
+    if (!createOrganization || !setActive) return;
 
     setLoading(true);
     setError(null);
     try {
-      const org = await createOrganization({ name: trimmed });
+      const org = await createOrganization({ name: values.orgName.trim() });
       await setActive({ organization: org.id });
     } catch {
       setError("Could not create your organization. Please try again.");
@@ -74,46 +106,68 @@ function OrgSetupStep() {
 
   if (existingOrg) {
     return (
-      <div className="w-full space-y-4">
-        <p className="text-center text-zinc-300">
-          Continue with <span className="font-semibold text-white">{existingOrg.name}</span> to choose your plan.
-        </p>
-        {error ? <p className="text-center text-sm text-red-400">{error}</p> : null}
-        <button
-          type="button"
-          onClick={activateExistingOrg}
-          disabled={loading}
-          className="w-full cursor-pointer rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-muted disabled:opacity-50"
-        >
-          {loading ? "Loading..." : "Continue to plans"}
-        </button>
-      </div>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Continue with your organization</CardTitle>
+          <CardDescription>
+            Continue with{" "}
+            <span className="font-semibold text-foreground">
+              {existingOrg.name}
+            </span>{" "}
+            to choose your plan.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {error ? (
+            <p className="mb-4 text-sm text-destructive">{error}</p>
+          ) : null}
+          <Button
+            type="button"
+            onClick={activateExistingOrg}
+            disabled={loading}
+            className={cn("w-full", authButtonClass)}
+          >
+            {loading ? "Loading..." : "Continue to plans"}
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <form onSubmit={handleCreateOrg} className="w-full space-y-4">
-      <label htmlFor="org-name" className="block text-sm font-medium text-zinc-300">
-        Organization name
-      </label>
-      <input
-        id="org-name"
-        type="text"
-        value={orgName}
-        onChange={(event) => setOrgName(event.target.value)}
-        placeholder="Your business name"
-        className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-white placeholder:text-zinc-500 focus:border-primary focus:outline-none"
-        required
-      />
-      {error ? <p className="text-sm text-red-400">{error}</p> : null}
-      <button
-        type="submit"
-        disabled={loading || !orgName.trim()}
-        className="w-full cursor-pointer rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-muted disabled:opacity-50"
-      >
-        {loading ? "Creating..." : "Continue to plans"}
-      </button>
-    </form>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Set up your organization</CardTitle>
+        <CardDescription>
+          Enter your business name to continue to plan selection.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={form.handleSubmit(handleCreateOrg)}>
+          <FieldGroup>
+            <Field data-invalid={!!form.formState.errors.orgName}>
+              <FieldLabel htmlFor="org-name">Organization name</FieldLabel>
+              <Input
+                id="org-name"
+                placeholder="Your business name"
+                className={authFieldClass}
+                aria-invalid={!!form.formState.errors.orgName}
+                {...form.register("orgName")}
+              />
+              <FieldError errors={[form.formState.errors.orgName]} />
+            </Field>
+            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            <Button
+              type="submit"
+              disabled={loading || !form.watch("orgName")?.trim()}
+              className={cn("w-full", authButtonClass)}
+            >
+              {loading ? "Creating..." : "Continue to plans"}
+            </Button>
+          </FieldGroup>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -122,20 +176,33 @@ export default function SignUpPage() {
 
   return (
     <AuthShell
-      title="Start your 30-day free trial"
+      title={`Start your ${TRIAL_DAYS}-day free trial`}
       subtitle="Manage media across all your locations — sign up, create your organization, and choose a plan."
     >
       {!isLoaded ? (
-        <p className="text-center text-zinc-400">Loading...</p>
+        <p className="text-center text-muted-foreground">Loading...</p>
       ) : isSignedIn ? (
         <OrgSetupStep />
       ) : (
-        <SignUp
-          routing="path"
-          path={ROUTES.signUp}
-          signInUrl={ROUTES.signIn}
-          appearance={clerkAppearance}
-        />
+        <>
+          <SignUp
+            routing="path"
+            path={ROUTES.signUp}
+            signInUrl={ROUTES.signIn}
+            appearance={clerkAppearance}
+          />
+          <p className="mt-4 text-center text-xs text-zinc-500">
+            By signing up you agree to our{" "}
+            <a href={ROUTES.terms} className="text-primary hover:underline">
+              Terms of Use
+            </a>{" "}
+            and{" "}
+            <a href={ROUTES.privacy} className="text-primary hover:underline">
+              Privacy Policy
+            </a>
+            .
+          </p>
+        </>
       )}
     </AuthShell>
   );

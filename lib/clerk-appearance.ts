@@ -1,22 +1,26 @@
+import { shadcn } from "@clerk/ui/themes";
+import {
+  authButtonClass,
+  authErrorClass,
+  authFieldClass,
+  authSocialButtonClass,
+} from "./auth-form-styles";
+
 export const clerkAppearance = {
+  theme: shadcn,
   variables: {
     colorPrimary: "hsl(0 72% 52%)",
-    colorBackground: "hsl(0 0% 9%)",
-    colorInputBackground: "hsl(0 0% 15%)",
-    colorInputText: "#ffffff",
-    colorText: "#ffffff",
-    colorTextSecondary: "#a1a1aa",
-    borderRadius: "0.75rem",
+    borderRadius: "0.5rem",
     fontFamily: "var(--font-urbanist), Urbanist, system-ui, sans-serif",
   },
   elements: {
-    card: "bg-zinc-900 border border-zinc-800 shadow-xl",
-    headerTitle: "text-white",
-    headerSubtitle: "text-zinc-400",
-    socialButtonsBlockButton:
-      "bg-zinc-800 border border-zinc-600 text-white hover:bg-zinc-700",
-    formButtonPrimary:
-      "bg-primary hover:bg-primary-muted text-white rounded-full",
+    formFieldInput: authFieldClass,
+    formFieldErrorText: authErrorClass,
+    formButtonPrimary: authButtonClass,
+    formButtonReset: authButtonClass,
+    socialButtonsBlockButton: authSocialButtonClass,
+    socialButtonsProviderIcon__apple: "text-foreground [&_svg]:fill-current",
+    alternativeMethodsBlockButton: authSocialButtonClass,
     footerActionLink: "text-primary hover:text-primary-muted",
   },
 };

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { StoreDownloadButtons } from "@/components/StoreDownloadButtons";
-import { ROUTES } from "@/lib/routes";
+import { ROUTES, TRIAL_DAYS } from "@/lib/routes";
 
 export function AppStoreButtons() {
   return (
@@ -10,7 +10,7 @@ export function AppStoreButtons() {
           href={ROUTES.signUp}
           className="mb-5 inline-block text-lg font-semibold text-zinc-200 transition-colors hover:text-white md:text-xl"
         >
-          Start a 30 day free trial
+          Start a {TRIAL_DAYS} day free trial
         </Link>
         <StoreDownloadButtons
           googlePlayHref={ROUTES.signUp}

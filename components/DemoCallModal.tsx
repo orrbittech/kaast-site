@@ -75,7 +75,7 @@ export function DemoCallModal({ open, onClose }: DemoCallModalProps) {
         ) : (
           <>
             {error && (
-              <p className="mb-4 rounded-lg bg-red-500/20 px-3 py-2 text-sm text-red-300">
+              <p className="mb-4 rounded-lg bg-primary/20 px-3 py-2 text-sm text-primary">
                 {error}
               </p>
             )}
@@ -96,7 +96,7 @@ export function DemoCallModal({ open, onClose }: DemoCallModalProps) {
                   <div className="flex items-center gap-2">
                     <div
                       className={`h-3 w-3 rounded-full ${
-                        isSpeechActive ? "animate-pulse bg-red-500" : "bg-primary"
+                        isSpeechActive ? "animate-pulse bg-primary" : "bg-primary"
                       }`}
                       aria-hidden
                     />

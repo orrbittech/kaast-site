@@ -1,0 +1,24 @@
+/* Apple logo is black SVG — invert on dark backgrounds */
+.dark .cl-socialButtonsProviderIcon__apple svg,
+.dark [class*="socialButtonsProviderIcon"][class*="apple"] svg {
+  filter: invert(1);
+}
+
+/* Ensure italic placeholders on all Clerk inputs */
+.cl-formFieldInput::placeholder,
+.cl-formFieldInput input::placeholder {
+  font-style: italic;
+}
+
+/* Remove focus ring on Clerk inputs */
+.cl-formFieldInput:focus,
+.cl-formFieldInput input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Override Clerk internal padding so authFieldClass p-2 applies */
+input.cl-formFieldInput,
+.cl-formFieldInput input {
+  padding: 0.5rem !important; /* p-2 */
+}

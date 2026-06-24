@@ -11,7 +11,7 @@ export interface OnboardingSlide {
 /** Onboarding slides - meaningful statements for the landing page. */
 export const SLIDES: OnboardingSlide[] = [
   {
-    title: "Take full control. Manage every screen from your fingertips",
+    title: "Take full control. Control every screen from your fingertips",
     highlight: "KAAST",
   },
   { title: "Keep your brand locked in across every display" },
