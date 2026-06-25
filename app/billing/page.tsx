@@ -4,6 +4,7 @@ import { PricingTable, useAuth, useOrganization } from "@clerk/nextjs";
 import { useSubscription } from "@clerk/nextjs/experimental";
 import { AuthShell } from "@/components/AuthShell";
 import { clerkAppearance } from "@/lib/clerk-appearance";
+import { hasAnyOrgPlan } from "@/lib/billing-config";
 import { ROUTES } from "@/lib/routes";
 
 const highlightedPlan = process.env.NEXT_PUBLIC_CLERK_HIGHLIGHTED_PLAN;
@@ -22,10 +23,7 @@ export default function BillingPage() {
   }
 
   const isAdmin = membership?.role === "org:admin";
-  const hasActivePlan =
-    has?.({ plan: "org:starter" }) ||
-    has?.({ plan: "org:growth" }) ||
-    has?.({ plan: "org:scale" });
+  const hasActivePlan = hasAnyOrgPlan(has);
 
   return (
     <AuthShell
